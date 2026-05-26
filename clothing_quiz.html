@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>나의 의류 소비 유형 테스트</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+    background: #f7f6f3;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.25rem;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: #888;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: #ebebeb;
+    border-radius: 2px;
+  }
+
+  .progress-bar-fill {
+    height: 4px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: #aaa;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .q-text {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+  }
+
+  .option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    background: #f7f6f3;
+    border: 1.5px solid transparent;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #1a1a1a;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.15s;
+    line-height: 1.5;
+    font-family: inherit;
+  }
+
+  .option-btn:hover {
+    background: #f0ede8;
+  }
+
+  .option-btn.selected {
+    background: #fff;
+    border-color: #1a1a1a;
+  }
+
+  .next-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1.25rem;
+    opacity: 0.25;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    font-family: inherit;
+  }
+
+  .next-btn.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .next-btn:active { transform: scale(0.98); }
+
+  .result-badge {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .result-type {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 0.4rem;
+  }
+
+  .result-sub {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .result-desc {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.75;
+    background: #f7f6f3;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tip-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #aaa;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .tip-item {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.65;
+    padding: 12px 14px;
+    border-left: 2px solid #1a1a1a;
+    margin-bottom: 10px;
+    background: #fafaf8;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .pamphlet-note {
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin-top: 1.25rem;
+    line-height: 1.6;
+    padding: 12px;
+    background: #f7f6f3;
+    border-radius: 10px;
+  }
+
+  .retry-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: transparent;
+    color: #1a1a1a;
+    border: 1.5px solid #ddd;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+
+  .retry-btn:hover { background: #f7f6f3; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>👗 나의 의류 소비 유형은?</h1>
+    <p>7개 질문으로 알아보는 나의 패션 소비 습관</p>
+  </div>
+
+  <div class="card">
+
+    <div id="quiz-section">
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="q-label">1 / 7</div>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div id="options"></div>
+      <button class="next-btn" id="next-btn">다음 →</button>
+    </div>
+
+    <div id="result-section" style="display:none">
+      <div class="result-badge" id="result-badge"></div>
+      <div class="result-type" id="result-type"></div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-desc" id="result-desc"></div>
+      <div class="tip-title">이런 점을 참고해보세요</div>
+      <div id="result-tips"></div>
+      <div class="pamphlet-note" id="pamphlet-note"></div>
+      <button class="retry-btn" onclick="restart()">↩ 다시 해보기</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "옷을 주로 언제 사나요?",
+    options: [
+      { text: "유행하는 아이템이 생겼을 때", scores: { 충동: 2 } },
+      { text: "세일 기간, 안 사면 손해일 것 같아서", scores: { 충동: 2 } },
+      { text: "기존 옷이 낡거나 진짜 필요할 때", scores: { 균형: 1, 활용: 1 } },
+      { text: "오랫동안 원하던 아이템이 생겼을 때", scores: { 탐색: 2 } },
+    ]
+  },
+  {
+    text: "온라인으로 옷을 살 때 어떻게 하나요?",
+    options: [
+      { text: "리뷰 꼼꼼히 읽고, 반품 정책도 확인해요", scores: { 탐색: 1, 균형: 1 } },
+      { text: "사진이랑 가격 보고 바로 사요", scores: { 충동: 2 } },
+      { text: "온라인으로 잘 안 사요", scores: { 활용: 2 } },
+      { text: "리뷰는 보는데 결국 충동구매가 되는 편", scores: { 충동: 2 } },
+    ]
+  },
+  {
+    text: "사놓고 잘 안 입게 된 옷의 이유는?",
+    options: [
+      { text: "사이즈가 맞지 않아요", scores: { 탐색: 2 } },
+      { text: "막상 코디하기 어렵거나 생각했던 것과 달라요", scores: { 탐색: 1, 충동: 1 } },
+      { text: "재질이나 착용감이 별로예요", scores: { 충동: 2 } },
+      { text: "잘 입게 돼요", scores: { 균형: 1, 활용: 1 } },
+    ]
+  },
+  {
+    text: "입을 옷이 없다고 느낄 때 어떻게 하나요?",
+    options: [
+      { text: "바로 쇼핑 앱을 켜요", scores: { 충동: 2 } },
+      { text: "한참 고민하다 결국 사요", scores: { 탐색: 2 } },
+      { text: "옷장을 뒤져서 새 조합을 찾아봐요", scores: { 활용: 2 } },
+      { text: "그런 일이 잘 없어요", scores: { 균형: 2 } },
+    ]
+  },
+  {
+    text: "오래되거나 잘 안 입는 옷을 어떻게 하나요?",
+    options: [
+      { text: "레이어드하거나 새 조합으로 활용해봐요", scores: { 활용: 2 } },
+      { text: "중고거래나 기부해요", scores: { 균형: 1, 활용: 1 } },
+      { text: "옷장에 그냥 쌓여있어요", scores: { 충동: 1, 탐색: 1 } },
+      { text: "그런 옷이 거의 없어요", scores: { 균형: 2 } },
+    ]
+  },
+  {
+    text: "부모님 옷이나 오래된 옷을 꺼내 입어본 적 있나요?",
+    options: [
+      { text: "자주 있고, 잘 활용해요", scores: { 활용: 2 } },
+      { text: "생각해본 적 없어요", scores: { 충동: 2 } },
+      { text: "해봤는데 어떻게 코디할지 모르겠어요", scores: { 탐색: 2 } },
+      { text: "필요하면 가끔 해요", scores: { 균형: 2 } },
+    ]
+  },
+  {
+    text: "세탁이나 옷 보관에 신경 쓰는 편인가요?",
+    options: [
+      { text: "라벨 확인하고 소재별로 관리해요", scores: { 균형: 1, 활용: 1 } },
+      { text: "대충 다 같이 세탁해요", scores: { 충동: 2 } },
+      { text: "신경 쓰고 싶은데 잘 몰라요", scores: { 탐색: 2 } },
+      { text: "기본적인 건 지키려고 해요", scores: { 균형: 2 } },
+    ]
+  }
+];
+
+const results = {
+  탐색: {
+    badge: "🔍",
+    type: "신중 탐색러",
+    sub: "고민은 많지만 아직 나만의 기준이 없는 유형",
+    desc: "구매 전에 충분히 고민하는 편이지만, 막상 나에게 어떤 옷이 잘 맞는지, 어떤 스타일이 어울리는지 파악하기 어려운 유형이에요. 사이즈 실패나 코디 어려움이 반복된다면 기준을 만드는 게 먼저예요.",
+    tips: [
+      "잘 맞고 자주 입는 옷의 실측을 메모해두고 새 옷 살 때 비교해보세요. 기준 옷이 없다면 오프라인 매장에서 여러 사이즈를 입어보며 감을 잡는 것부터 시작해요.",
+      "온라인 구매 시 리뷰에서 색감 비침 여부, 세탁 후 변화를 꼭 확인하고 반품 정책도 미리 파악해두세요.",
+      "새 옷을 사기 전에 '지금 내 옷장에서 뭐랑 입지?' 한 가지 바로 떠오르지 않으면 보류해보세요."
+    ],
+    pamphlet: "📄 팜플렛의 '의류 구매 전' 파트를 특히 참고해보세요!"
+  },
+  충동: {
+    badge: "🛒",
+    type: "지름신 강림러",
+    sub: "일단 사고 보는 유형",
+    desc: "세일이나 유행에 흔들려 일단 사고 보는 편이에요. 옷장엔 옷이 많은데 막상 입을 옷이 없다는 느낌이 자주 드는 유형이에요. 구매 전 잠깐의 습관 하나가 옷장을 바꿀 수 있어요.",
+    tips: [
+      "마음에 드는 옷은 사진만 찍고 하루 뒤 다시 생각해보세요. 그래도 생각나면 그때 구매!",
+      "쇼핑 전 내 옷장 사진을 찍어두고 비슷한 옷이 이미 있는지 확인하는 습관을 들여보세요.",
+      "세일 상품일수록 왜 재고가 남았는지 한 번 더 생각해보세요. 핏이 애매하거나 유행이 지난 경우가 많아요."
+    ],
+    pamphlet: "📄 팜플렛의 '의류 구매 전'과 '의류 처분' 파트를 참고해보세요!"
+  },
+  균형: {
+    badge: "✨",
+    type: "패션 밸런서",
+    sub: "구매도 활용도 잘 하는 유형",
+    desc: "구매 전 충분히 고민하고, 산 옷은 잘 활용하는 균형 잡힌 유형이에요. 세탁과 보관도 신경 쓰는 편이라 옷을 오래 입을 줄 알아요. 이미 좋은 습관을 갖고 있어요!",
+    tips: [
+      "첫 구매 브랜드라면 저렴한 아이템으로 핏 먼저 테스트해보세요.",
+      "글로벌 브랜드의 멀티 사이즈 택 표기에 주의하세요. 같은 숫자라도 국가 기준에 따라 크기가 완전히 달라요.",
+      "이미 잘 하고 있어요! 팜플렛의 다른 유형 팁도 훑어보세요."
+    ],
+    pamphlet: "📄 팜플렛 전체를 가볍게 훑어보며 놓친 팁이 없는지 확인해보세요!"
+  },
+  활용: {
+    badge: "♻️",
+    type: "옷장 탐험가",
+    sub: "기존 옷 재발견에 능한 알뜰 유형",
+    desc: "새 옷을 사기보다 기존 옷을 최대한 활용하는 알뜰한 유형이에요. 레이어드나 새 조합으로 옷의 수명을 늘릴 줄 알고, 중고거래나 기부도 자연스럽게 실천하는 편이에요.",
+    tips: [
+      "울, 니트, 레이온, 다운 소재는 잘못된 세탁 한 번에 영구 손상될 수 있어요. 라벨의 세탁 기호를 꼭 확인해보세요.",
+      "Whering 앱을 활용해보세요. 가진 옷을 등록하면 AI가 새 코디를 추천해줘요.",
+      "다이소의 다리미 접착 수선테이프, 보풀 제거기, 패브릭 패치로 간단한 리폼도 시도해보세요."
+    ],
+    pamphlet: "📄 팜플렛의 '의류 활용 및 관리' 파트를 특히 참고해보세요!"
+  }
+};
+
+let current = 0;
+let answers = [];
+let selectedIdx = null;
+
+function getTopType(scores) {
+  return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+}
+
+function render() {
+  const q = questions[current];
+  document.getElementById('q-label').textContent = `${current + 1} / ${questions.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress').style.width = `${(current / questions.length) * 100}%`;
+
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  selectedIdx = null;
+  document.getElementById('next-btn').classList.remove('active');
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt.text;
+    btn.onclick = () => {
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedIdx = i;
+      document.getElementById('next-btn').classList.add('active');
+    };
+    optDiv.appendChild(btn);
+  });
+}
+
+function next() {
+  if (selectedIdx === null) return;
+  answers.push(questions[current].options[selectedIdx].scores);
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    render();
+  }
+}
+
+function showResult() {
+  const totals = { 탐색: 0, 충동: 0, 균형: 0, 활용: 0 };
+  answers.forEach(sc => {
+    Object.entries(sc).forEach(([k, v]) => { totals[k] += v; });
+  });
+  const type = getTopType(totals);
+  const r = results[type];
+
+  document.getElementById('quiz-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-badge').textContent = r.badge;
+  document.getElementById('result-type').textContent = r.type;
+  document.getElementById('result-sub').textContent = r.sub;
+  document.getElementById('result-desc').textContent = r.desc;
+  document.getElementById('pamphlet-note').textContent = r.pamphlet;
+
+  const tipsDiv = document.getElementById('result-tips');
+  tipsDiv.innerHTML = '';
+  r.tips.forEach(tip => {
+    const d = document.createElement('div');
+    d.className = 'tip-item';
+    d.textContent = tip;
+    tipsDiv.appendChild(d);
+  });
+}
+
+function restart() {
+  current = 0;
+  answers = [];
+  selectedIdx = null;
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  render();
+}
+
+document.getElementById('next-btn').onclick = next;
+render();
+</script>
+</body>
+</html>
